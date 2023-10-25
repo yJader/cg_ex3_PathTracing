@@ -103,5 +103,5 @@ Vector3f Scene::castRay(const Ray &ray, int depth) const
     // 计算直接光照部分
     Vector3f p = inter.coords;
     Vector3f N = inter.normal.normalized();
-    Vector3f
+    Vector3f wo = ray.direction;
 }
