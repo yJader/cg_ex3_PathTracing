@@ -1,0 +1,3 @@
+/home/jader/graphics/ex3/build/CMakeFiles/rebuild_cache.dir
+/home/jader/graphics/ex3/build/CMakeFiles/edit_cache.dir
+/home/jader/graphics/ex3/build/CMakeFiles/RayTracing.dir

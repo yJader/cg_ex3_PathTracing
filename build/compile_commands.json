@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/jader/graphics/ex3/build",
+  "command": "/usr/bin/c++    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/main.cpp.o -c /home/jader/graphics/ex3/src/main.cpp",
+  "file": "/home/jader/graphics/ex3/src/main.cpp"
+},
+{
+  "directory": "/home/jader/graphics/ex3/build",
+  "command": "/usr/bin/c++    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/Vector.cpp.o -c /home/jader/graphics/ex3/src/Vector.cpp",
+  "file": "/home/jader/graphics/ex3/src/Vector.cpp"
+},
+{
+  "directory": "/home/jader/graphics/ex3/build",
+  "command": "/usr/bin/c++    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/Scene.cpp.o -c /home/jader/graphics/ex3/src/Scene.cpp",
+  "file": "/home/jader/graphics/ex3/src/Scene.cpp"
+},
+{
+  "directory": "/home/jader/graphics/ex3/build",
+  "command": "/usr/bin/c++    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/BVH.cpp.o -c /home/jader/graphics/ex3/src/BVH.cpp",
+  "file": "/home/jader/graphics/ex3/src/BVH.cpp"
+},
+{
+  "directory": "/home/jader/graphics/ex3/build",
+  "command": "/usr/bin/c++    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/Renderer.cpp.o -c /home/jader/graphics/ex3/src/Renderer.cpp",
+  "file": "/home/jader/graphics/ex3/src/Renderer.cpp"
+}
+]

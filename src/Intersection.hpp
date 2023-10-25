@@ -11,21 +11,22 @@ class Sphere;
 
 struct Intersection
 {
-    Intersection(){
-        happened=false;
-        coords=Vector3f();
-        normal=Vector3f();
-        distance= std::numeric_limits<double>::max();
-        obj =nullptr;
-        m=nullptr;
+    Intersection()
+    {
+        happened = false;
+        coords = Vector3f();
+        normal = Vector3f();
+        distance = std::numeric_limits<double>::max();
+        obj = nullptr;
+        m = nullptr;
     }
     bool happened;
-    Vector3f coords;
-    Vector3f tcoords;
-    Vector3f normal;
-    Vector3f emit;
-    double distance;
-    Object* obj;
-    Material* m;
+    Vector3f coords;  // 交点坐标
+    Vector3f tcoords; // 纹理坐标
+    Vector3f normal;  // 交点法向量
+    Vector3f emit;    // 物体发射光照
+    double distance;  // 光线与交点距离
+    Object *obj;      // 交点物体
+    Material *m;      // 交点材质
 };
-#endif //RAYTRACING_INTERSECTION_H
+#endif // RAYTRACING_INTERSECTION_H
