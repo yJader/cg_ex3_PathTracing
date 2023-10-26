@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/home/jader/jader/graphics/ex3/src",
+    "cmake.sourceDirectory": "/home/jader/graphics/ex3/src",
     "files.associations": {
         "limits": "cpp",
         "optional": "cpp",

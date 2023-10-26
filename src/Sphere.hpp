@@ -101,7 +101,7 @@ public:
 
         // 单位球面, 球坐标系→直角坐标系 (z, y, x)?
         Vector3f dir(std::cos(phi), std::sin(phi) * std::cos(theta), std::sin(phi) * std::sin(theta));
-        // 圆心+半径*dir
+        // 圆心+半径*dir, 即球面上一点
         pos.coords = center + radius * dir;
         pos.normal = dir;
         pos.emit = m->getEmission();
