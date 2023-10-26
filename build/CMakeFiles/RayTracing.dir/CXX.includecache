@@ -81,12 +81,10 @@ Scene.hpp
 /home/jader/graphics/ex3/src/Scene.hpp
 Renderer.hpp
 /home/jader/graphics/ex3/src/Renderer.hpp
+omp.h
+-
 
 /home/jader/graphics/ex3/src/Renderer.hpp
-Scene.hpp
-/home/jader/graphics/ex3/src/Scene.hpp
-
-/home/jader/graphics/ex3/src/Scene.cpp
 Scene.hpp
 /home/jader/graphics/ex3/src/Scene.hpp
 

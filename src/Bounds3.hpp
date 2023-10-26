@@ -113,7 +113,7 @@ inline bool Bounds3::IntersectP(const Ray &ray, const Vector3f &invDir,
 
     float t_enter = std::max(t_Min_x, std::max(t_Min_y, t_Min_z)); // 光线射入时间
     float t_exit = std::min(t_Max_x, std::min(t_Max_y, t_Max_z));  // 光线射出时间
-    if (t_enter < t_exit && t_exit >= 0)
+    if (t_enter <= t_exit && t_exit >= 0)
         return true;
     else
         return false;

@@ -5,10 +5,39 @@
 #include <fstream>
 #include "Scene.hpp"
 #include "Renderer.hpp"
+#include <omp.h>
 
 inline float deg2rad(const float &deg) { return deg * M_PI / 180.0; }
 
 const float EPSILON = 0.00001;
+
+int prog = 0;
+omp_lock_t lock;
+
+void para(Vector3f eye_pos, std::vector<Vector3f> &framebuffer, const Scene &scene,
+          int spp, float imageAspectRatio, float scale, int start, int end)
+{
+
+    for (uint32_t j = start; j < end; ++j)
+    {
+        for (uint32_t i = 0; i < scene.width; ++i)
+        {
+            // generate primary ray direction
+            float x = (2 * (i + 0.5) / (float)scene.width - 1) * imageAspectRatio * scale;
+            float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
+
+            Vector3f dir = normalize(Vector3f(-x, y, 1));
+            for (int k = 0; k < spp; k++)
+            {
+                framebuffer[j * scene.width + i] += scene.castRay(Ray(eye_pos, dir), 0) / spp;
+            }
+        }
+        omp_set_lock(&lock);
+        prog++;
+        UpdateProgress(prog / (float)scene.height);
+        omp_unset_lock(&lock);
+    }
+}
 
 // The main render function. This where we iterate over all pixels in the image,
 // generate primary rays and cast these rays into the scene. The content of the
@@ -21,32 +50,29 @@ void Renderer::Render(const Scene &scene)
     float imageAspectRatio = scene.width / (float)scene.height;
     Vector3f eye_pos(278, 273, -800);
     int m = 0;
-
-    // change the spp value to change sample ammount
-    int spp = 4; // spp: samples per pixel, 对每个像素进行多次采样
+    int spp = 16; // spp: samples per pixel, 对每个像素进行多次采样
     std::cout << "SPP: " << spp << "\n";
-    for (uint32_t j = 0; j < scene.height; ++j)
-    {
-        for (uint32_t i = 0; i < scene.width; ++i)
-        {
-            // generate primary ray direction
-            float x = (2 * (i + 0.5) / (float)scene.width - 1) *
-                      imageAspectRatio * scale;
-            float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
 
-            Vector3f dir = normalize(Vector3f(-x, y, 1));
-            for (int k = 0; k < spp; k++)
-            {
-                framebuffer[m] += scene.castRay(Ray(eye_pos, dir), 0) / spp;
-            }
-            m++;
-        }
-        UpdateProgress(j / (float)scene.height);
+    int thread_size = 48;
+    int thread_step = scene.height / thread_size;
+
+#pragma omp parallel for
+    for (int i = 0; i < thread_size; i++)
+    {
+        para(eye_pos, framebuffer, scene, spp, imageAspectRatio,
+             scale, i * thread_step, (i + 1) * thread_step);
     }
+
     UpdateProgress(1.f);
 
     // save framebuffer to file
     FILE *fp = fopen("binary.ppm", "wb");
+    if (fp == nullptr)
+    {
+        perror("打开binary.ppm错误");
+        return;
+    }
+
     (void)fprintf(fp, "P6\n%d %d\n255\n", scene.width, scene.height);
     for (auto i = 0; i < scene.height * scene.width; ++i)
     {
