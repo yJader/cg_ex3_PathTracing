@@ -7,12 +7,26 @@
 #include <chrono>
 #include <string>
 #include <cstring>
+#include <stdlib.h>
+#include <unistd.h>
 
-#define WORK_PATH "/home/jader/graphics/ex3"
+// #define WORK_PATH "/home/jader/graphics/ex3"
 
 const char *getModelPath(const char *filename)
 {
-    std::string fullPath = WORK_PATH;
+    char workpath[1024]; // 定义一个足够大的字符数组来存储路径
+
+    if (getcwd(workpath, sizeof(workpath)) != NULL)
+    {
+        printf("当前工作目录：%s\n", workpath);
+    }
+    else
+    {
+        perror("获取当前工作目录失败");
+        return;
+    }
+
+    std::string fullPath = workpath;
     fullPath += "/src/models/";
     fullPath += filename;
     char *pathCopy = new char[fullPath.length() + 1];
@@ -27,6 +41,26 @@ const char *getModelPath(const char *filename)
 // function().
 int main(int argc, char **argv)
 {
+    int spp = 16;
+    for (int i = 1; i < argc; i++)
+    {
+        std::string arg = argv[i];
+
+        // 检查是否为输出选项
+        if (arg == "-spp")
+        {
+            // 关闭反走样
+            // printf("已关闭反走样\n");
+            spp = atoi(argv[++i]);
+        }
+        else if (arg == "-h")
+        {
+            std::cout << "用法：" << std::endl;
+            std::cout << "-spp \t指定采样数, 默认为16" << std::endl;
+            std::cout << "-h  \t显示帮助信息" << std::endl;
+            return 0;
+        }
+    }
 
     // Change the definition here to change resolution
     Scene scene(784, 784);
@@ -58,7 +92,7 @@ int main(int argc, char **argv)
     Renderer r;
 
     auto start = std::chrono::system_clock::now();
-    r.Render(scene);
+    r.Render(scene, spp);
     auto stop = std::chrono::system_clock::now();
 
     std::cout << "Render complete: \n";

@@ -42,7 +42,8 @@ void para(Vector3f eye_pos, std::vector<Vector3f> &framebuffer, const Scene &sce
 // The main render function. This where we iterate over all pixels in the image,
 // generate primary rays and cast these rays into the scene. The content of the
 // framebuffer is saved to a file.
-void Renderer::Render(const Scene &scene)
+// spp: samples per pixel, 对每个像素进行多次采样
+void Renderer::Render(const Scene &scene, int spp)
 {
     std::vector<Vector3f> framebuffer(scene.width * scene.height);
 
@@ -50,7 +51,7 @@ void Renderer::Render(const Scene &scene)
     float imageAspectRatio = scene.width / (float)scene.height;
     Vector3f eye_pos(278, 273, -800);
     int m = 0;
-    int spp = 16; // spp: samples per pixel, 对每个像素进行多次采样
+    // int spp = 16;
     std::cout << "SPP: " << spp << "\n";
 
     int thread_size = 48;
