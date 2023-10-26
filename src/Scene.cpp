@@ -79,7 +79,7 @@ Vector3f Scene::castRay(const Ray &ray, int depth) const
     // TO DO Implement Path Tracing Algorithm here
     Vector3f L_dir = {0, 0, 0}, L_indir = {0, 0, 0};
     // 判断光线是否与场景中的物体相交
-    Intersection obj_inter = intersect(ray);
+    Intersection obj_inter = bvh->Intersect(ray);
 
     // 没有交点
     if (!obj_inter.happened)
@@ -115,7 +115,7 @@ Vector3f Scene::castRay(const Ray &ray, int depth) const
 
     // 判断直接光源是否被阻挡
     Ray obj2light(obj_p, ws);
-    if (fabs(intersect(obj2light).distance - d) < 0.001)
+    if (bvh->Intersect(obj2light).distance - d > -0.001)
     {
         Vector3f eval = obj_material->eval(wo, ws, obj_N);
         // L_dir = emit * eval(wo, ws, N) * dot(ws, N) * dot(ws, NN) / | x - p | ^2 / pdf_light
@@ -131,7 +131,7 @@ Vector3f Scene::castRay(const Ray &ray, int depth) const
         Vector3f wi = obj_material->sample(wo, obj_N); // 间接光源的入射向量
         Ray indir_ray(obj_p, wi);                      // 间接光源入射光线
         // L_indir = shade(q, wi) * eval(wo, wi, N) * dot(wi, N) / pdf(wo, wi, N) / RussianRoulette
-        Intersection inter = intersect(indir_ray);
+        Intersection inter = bvh->Intersect(indir_ray);
         if (inter.happened && !inter.m->hasEmission()) // 间接光源得会发光啊
         {
             Vector3f eval = obj_material->eval(wo, wi, obj_N);
