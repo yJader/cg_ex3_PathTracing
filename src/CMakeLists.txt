@@ -7,4 +7,4 @@ add_executable(RayTracing main.cpp Object.hpp Vector.cpp Vector.hpp Sphere.hpp g
         Scene.hpp Light.hpp AreaLight.hpp BVH.cpp BVH.hpp Bounds3.hpp Ray.hpp Material.hpp Intersection.hpp
         Renderer.cpp Renderer.hpp)
 
-        set(CMAKE_CXX_FLAGS "${CAMKE_CXX_FLAGS} -O3 -fopenmp")
+set(CMAKE_CXX_FLAGS "${CAMKE_CXX_FLAGS} -O3 -fopenmp")

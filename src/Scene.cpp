@@ -136,7 +136,10 @@ Vector3f Scene::castRay(const Ray &ray, int depth) const
         {
             Vector3f eval = obj_material->eval(wo, wi, obj_N);
             float pdf_o = obj_material->pdf(wo, wi, obj_N);
-            L_indir = castRay(indir_ray, depth + 1) * eval * dotProduct(wi, obj_N) / pdf_o / RussianRoulette;
+            if (pdf_o > EPSILON)
+            {
+                L_indir = castRay(indir_ray, depth + 1) * eval * dotProduct(wi, obj_N) / pdf_o / RussianRoulette;
+            }
         }
     }
 

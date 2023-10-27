@@ -43,7 +43,7 @@ void para(Vector3f eye_pos, std::vector<Vector3f> &framebuffer, const Scene &sce
 // generate primary rays and cast these rays into the scene. The content of the
 // framebuffer is saved to a file.
 // spp: samples per pixel, 对每个像素进行多次采样
-void Renderer::Render(const Scene &scene, int spp)
+void Renderer::Render(const Scene &scene, int spp, char *pictureFilePath)
 {
     std::vector<Vector3f> framebuffer(scene.width * scene.height);
 
@@ -54,7 +54,7 @@ void Renderer::Render(const Scene &scene, int spp)
     // int spp = 16;
     std::cout << "SPP: " << spp << "\n";
 
-    int thread_size = 48;
+    int thread_size = 12;
     int thread_step = scene.height / thread_size;
 
 #pragma omp parallel for
@@ -67,10 +67,10 @@ void Renderer::Render(const Scene &scene, int spp)
     UpdateProgress(1.f);
 
     // save framebuffer to file
-    FILE *fp = fopen("binary.ppm", "wb");
+    FILE *fp = fopen(pictureFilePath, "wb");
     if (fp == nullptr)
     {
-        perror("打开binary.ppm错误");
+        perror("目标图片打开错误");
         return;
     }
 

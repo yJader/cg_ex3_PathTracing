@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// #define WORK_PATH "/home/jader/graphics/ex3"
+#define WORK_PATH "/home/jader/graphics/ex3"
 
 const char *getModelPath(const char *filename)
 {
@@ -23,7 +23,6 @@ const char *getModelPath(const char *filename)
     else
     {
         perror("获取当前工作目录失败");
-        return;
     }
 
     std::string fullPath = workpath;
@@ -51,7 +50,8 @@ int main(int argc, char **argv)
         {
             // 关闭反走样
             // printf("已关闭反走样\n");
-            spp = atoi(argv[++i]);
+            i++;
+            spp = atoi(argv[i]);
         }
         else if (arg == "-h")
         {
@@ -61,6 +61,9 @@ int main(int argc, char **argv)
             return 0;
         }
     }
+
+    char pictureFilePath[100];
+    sprintf(pictureFilePath, "./images/spp-%d.ppm", spp);
 
     // Change the definition here to change resolution
     Scene scene(784, 784);
@@ -92,7 +95,7 @@ int main(int argc, char **argv)
     Renderer r;
 
     auto start = std::chrono::system_clock::now();
-    r.Render(scene, spp);
+    r.Render(scene, spp, pictureFilePath);
     auto stop = std::chrono::system_clock::now();
 
     std::cout << "Render complete: \n";
