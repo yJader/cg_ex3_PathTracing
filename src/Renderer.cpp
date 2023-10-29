@@ -11,24 +11,45 @@ inline float deg2rad(const float &deg) { return deg * M_PI / 180.0; }
 
 const float EPSILON = 0.00001;
 
+bool open_msaa = true; // msaa开关, 默认开启
+
 int prog = 0;
 omp_lock_t lock;
 
 void para(Vector3f eye_pos, std::vector<Vector3f> &framebuffer, const Scene &scene,
           int spp, float imageAspectRatio, float scale, int start, int end)
 {
+    // 抗锯齿, 将一个pixel分解成spp个小像素点
+    int pixel_w, pixel_h;
+    pixel_w = pixel_h = sqrt(spp);
+    float step = 1.0 / pixel_w;
 
     for (uint32_t j = start; j < end; ++j)
     {
         for (uint32_t i = 0; i < scene.width; ++i)
         {
             // generate primary ray direction
-            float x = (2 * (i + 0.5) / (float)scene.width - 1) * imageAspectRatio * scale;
-            float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
+            // 原版框架, 无抗锯齿
+            float x, y;
+            Vector3f dir;
+            if (!open_msaa)
+            {
+                x = (2 * (i + 0.5) / (float)scene.width - 1) * imageAspectRatio * scale;
+                y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
+                dir = normalize(Vector3f(-x, y, 1));
+            }
 
-            Vector3f dir = normalize(Vector3f(-x, y, 1));
             for (int k = 0; k < spp; k++)
             {
+                // 抗锯齿
+                if (open_msaa)
+                {
+                    x = (2 * (i + step / 2 + step * (k % pixel_w)) / (float)scene.width - 1) *
+                        imageAspectRatio * scale;
+                    y = (1 - 2 * (j + step / 2 + step * (k / pixel_h)) / (float)scene.height) * scale;
+                    dir = normalize(Vector3f(-x, y, 1));
+                }
+
                 framebuffer[j * scene.width + i] += scene.castRay(Ray(eye_pos, dir), 0) / spp;
             }
         }
@@ -73,6 +94,7 @@ void Renderer::Render(const Scene &scene, int spp, char *pictureFilePath)
         perror("目标图片打开错误");
         return;
     }
+    printf("====输出为: %s====\n", pictureFilePath);
 
     (void)fprintf(fp, "P6\n%d %d\n255\n", scene.width, scene.height);
     for (auto i = 0; i < scene.height * scene.width; ++i)

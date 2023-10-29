@@ -12,6 +12,8 @@
 
 #define WORK_PATH "/home/jader/graphics/ex3"
 
+extern bool open_msaa;
+
 const char *getModelPath(const char *filename)
 {
     char workpath[1024]; // 定义一个足够大的字符数组来存储路径
@@ -51,19 +53,42 @@ int main(int argc, char **argv)
             // 关闭反走样
             // printf("已关闭反走样\n");
             i++;
-            spp = atoi(argv[i]);
+
+            if (sqrt(spp) * sqrt(spp) == spp)
+            {
+                spp = atoi(argv[i]);
+            }
+            else
+            {
+                printf("spp必须为完全平方数");
+                return 0;
+            }
+        }
+        else if (arg == "-cmsaa")
+        {
+            open_msaa = false;
         }
         else if (arg == "-h")
         {
             std::cout << "用法：" << std::endl;
-            std::cout << "-spp \t指定采样数, 默认为16" << std::endl;
+            std::cout << "-spp \t指定采样数, 默认为16 (完全平方数)" << std::endl;
+            std::cout << "-cmsaa \t 关闭抗锯齿" << std::endl;
             std::cout << "-h  \t显示帮助信息" << std::endl;
             return 0;
         }
     }
 
     char pictureFilePath[100];
-    sprintf(pictureFilePath, "./images/spp-%d.ppm", spp);
+    if (open_msaa)
+    {
+        printf("====MSAA已开启====\n");
+        sprintf(pictureFilePath, "./images/spp%d_msaa.ppm", spp);
+    }
+    else
+    {
+        printf("====MSAA已关闭====\n");
+        sprintf(pictureFilePath, "./images/spp%d.ppm", spp);
+    }
 
     // Change the definition here to change resolution
     Scene scene(784, 784);
